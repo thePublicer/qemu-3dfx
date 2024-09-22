@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TOP=qemu-8.2.1
+TOP=.
 GIT=`echo $@ | sed "s/\-git=\(.*\)/\1/;s/\ .*//"`
 if [ -z $GIT ]; then GIT=.; else shift; fi;
 ARG=$@; if [ -z $ARG ]; then ARG=HEAD; fi
