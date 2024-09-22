@@ -23,13 +23,13 @@ jobs:
       run: rsync -r qemu-0/hw/3dfx qemu-1/hw/mesa qemu-8.2.1/hw/
     - name: sign commit
       run: bash scripts/sign_commit
-    - name: cd qemu-8.2.1
-      run: cd qemu-8.2.1
-    - name: ls
-      run:  ls
-    - name: configure
-      run:  ./configure --target-list=i386-softmmu
+    - name: mkdir build
+      run: mkdir build
     - name: cd build
-      run: cd build
+      working-directory: ./build
+    - name: ls
+      run:  ls 
+    - name: configure
+      run:  ../qemu-8.2.1/configure --target-list=i386-softmmu
     - name: Ninja
       run: ninja
