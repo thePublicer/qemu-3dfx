@@ -20,7 +20,8 @@ jobs:
     - name: tar qemu-8.2.1
       run: tar xf qemu-8.2.1.tar.xz
     - name: rsync
-      run: rsync -r qemu-0/hw/3dfx qemu-1/hw/mesa qemu-8.2.1/hw/
+      working-directory: ./qemu-8.2.1
+      run: rsync -r qemu-0/hw/3dfx qemu-1/hw/mesa ./hw/
     - name: sign commit
       run: bash scripts/sign_commit
     - name: mkdir build
@@ -33,3 +34,7 @@ jobs:
     - name: Ninja
       working-directory: ./build
       run: ninja
+    - uses: actions/upload-artifact@v4
+      with:
+       name: qemu-linux
+       path: ./build
