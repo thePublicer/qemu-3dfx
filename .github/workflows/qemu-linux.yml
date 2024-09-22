@@ -23,7 +23,8 @@ jobs:
       working-directory: ./qemu-8.2.1
       run: rsync -r qemu-0/hw/3dfx qemu-1/hw/mesa ./hw/
     - name: sign commit
-      run: bash scripts/sign_commit
+      working-directory: ./qemu-8.2.1
+      run: bash ../scripts/sign_commit
     - name: mkdir build
       run: mkdir build
     - name: ls
