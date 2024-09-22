@@ -25,11 +25,11 @@ jobs:
       run: bash scripts/sign_commit
     - name: mkdir build
       run: mkdir build
-    - name: cd build
-      working-directory: ./build
     - name: ls
       run:  ls 
     - name: configure
+      working-directory: ./build
       run:  ../qemu-8.2.1/configure --target-list=i386-softmmu
     - name: Ninja
+      working-directory: ./build
       run: ninja
