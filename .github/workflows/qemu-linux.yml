@@ -20,15 +20,12 @@ jobs:
     - name: tar qemu-8.2.1
       run: tar xf qemu-8.2.1.tar.xz
     - name: rsync
-      working-directory: ./qemu-8.2.1
-      run: rsync -r qemu-0/hw/3dfx qemu-1/hw/mesa ./hw/
+      run: rsync -r qemu-0/hw/3dfx qemu-1/hw/mesa qemu-8.2.1/hw/
     - name: sign commit
       working-directory: ./qemu-8.2.1
       run: bash ../scripts/sign_commit
     - name: mkdir build
       run: mkdir build
-    - name: ls
-      run:  ls 
     - name: configure
       working-directory: ./build
       run:  ../qemu-8.2.1/configure --target-list=i386-softmmu
