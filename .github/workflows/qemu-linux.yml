@@ -21,15 +21,9 @@ jobs:
       run: tar xf qemu-8.2.1.tar.xz
     - name: rsync
       run: rsync -r qemu-0/hw/3dfx qemu-1/hw/mesa qemu-8.2.1/hw/
-    - name: cd qemu-8.2.1
-      run: cd qemu-8.2.1
     - name: sign commit
-      run: bash ../scripts/sign_commit
-    - name: mkdir build
-      run: mkdir ../build
-    - name: cd build
-      run: cd ../build
+      run: bash scripts/sign_commit
     - name: configure
-      run: ../qemu-8.2.1/configure --target-list=i386-softmmu
+      run: qemu-8.2.1/configure --target-list=i386-softmmu
     - name: Ninja
       run: ninja
