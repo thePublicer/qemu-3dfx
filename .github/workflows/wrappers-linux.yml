@@ -1,4 +1,4 @@
-name: qemu-linux
+name: wrappers-linux
 
 on:
   push:
