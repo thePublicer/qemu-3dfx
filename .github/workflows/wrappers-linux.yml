@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install requiremnts
-      run: sudo apt-get install -y --fix-missing gcc-mingw-w64 mingw-w64-tools curl git gcc-c++ which bison flex texinfo patch zlib-dev tar bzip2 gzip xz unzip python-dev m4 dos2unix nasm diffutils perl-File-Compare perl-Digest-SHA automake autoconf xxd
+      run: sudo apt-get install -y --fix-missing gcc-mingw-w64 mingw-w64-tools curl git build-essential which bison flex texinfo patch zlib1g-dev tar bzip2 gzip xz-utils unzip python3-dev m4 dos2unix nasm diffutils  automake autoconf xxd
     - name: env watcom
       run: WATCOM=/opt/openwatcom
     - name: download OpenWatcom
