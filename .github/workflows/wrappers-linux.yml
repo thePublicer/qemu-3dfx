@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install requiremnts
-      run: sudo apt-get install -y --fix-missing gcc-mingw-w64 mingw-w64-tools curl git build-essential bison flex texinfo patch zlib1g-dev tar bzip2 gzip xz-utils unzip python3-dev m4 dos2unix nasm diffutils  automake autoconf xxd
+      run: sudo apt-get install -y --fix-missing gcc-mingw-w64 mingw-w64-tools curl git build-essential bison flex texinfo patch zlib1g-dev tar bzip2 gzip xz-utils unzip python2-dev m4 dos2unix nasm diffutils  automake autoconf xxd
     - name: env watcom
       run: WATCOM=/opt/openwatcom
     - name: download OpenWatcom
@@ -35,7 +35,7 @@ jobs:
       run: sed -i '/build-gdb.sh/d' build-djgpp.sh 
     - name: build djgpp GCC
       working-directory: ./build-gcc
-      run: ./build-djgpp.sh --target=i686-pc-msdosdjgpp --prefix=/usr/local --batch all
+      run: sudo ./build-djgpp.sh --target=i686-pc-msdosdjgpp --prefix=/usr/local --batch all
     - name: remove build-gcc
       run: rm -rf build-gcc
     - name: configure
@@ -69,3 +69,7 @@ jobs:
       with:
        name: wrappers-mesa
        path: ./wrappers/mesa/build
+    - uses: actions/upload-artifact@v4
+      with:
+       name: wrappers-3dfx
+       path: ./wrappers/3dfx/build
