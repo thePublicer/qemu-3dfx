@@ -38,7 +38,6 @@ jobs:
     - name: Make
       working-directory: ./wrappers/3dfx/build
       run: make && make clean
-
     - name: make mesa build folder
       working-directory: ./wrappers/mesa
       run: mkdir build
