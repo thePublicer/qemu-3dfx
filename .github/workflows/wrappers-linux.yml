@@ -67,9 +67,5 @@ jobs:
       run: make clean
     - uses: actions/upload-artifact@v4
       with:
-       name: wrappers-3dfx
-       path: ./wrappers/3dfx/build
-    - uses: actions/upload-artifact@v4
-      with:
        name: wrappers-mesa
        path: ./wrappers/mesa/build
