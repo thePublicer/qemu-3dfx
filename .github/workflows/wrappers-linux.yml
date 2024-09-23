@@ -17,13 +17,25 @@ jobs:
       run: sudo apt-get install -y --fix-missing gcc-mingw-w64 mingw-w64-tools curl git gcc-c++ which bison flex texinfo patch zlib-dev tar bzip2 gzip xz unzip python-dev m4 dos2unix nasm diffutils perl-File-Compare perl-Digest-SHA automake autoconf xxd
     - name: env watcom
       run: WATCOM=/opt/openwatcom
-    - name: Setup OpenWatcom
-      run: curl -OL https://github.com/open-watcom/open-watcom-v2/releases/download/2024-05-02-Build/open-watcom-2_0-c-linux-x64 && chmod +x open-watcom-2_0-c-linux-x64 && TERM=linux script -qefc "./open-watcom-2_0-c-linux-x64 -is" /dev/null  && rm open-watcom-2_0-c-linux-x64
+    - name: download OpenWatcom
+      run: curl -OL https://github.com/open-watcom/open-watcom-v2/releases/download/2024-05-02-Build/open-watcom-2_0-c-linux-x64
+    - name: chmod OpenWatcom
+      run: chmod +x open-watcom-2_0-c-linux-x64
+    - name: temp OpenWatcom
+      run: TERM=linux script -qefc "./open-watcom-2_0-c-linux-x64 -is"
+    - name: remove download OpenWatcom
+      run: rm open-watcom-2_0-c-linux-x64
     - name: git clone djgpp GCC
       run: git clone https://github.com/jwt27/build-gcc.git
-    - name: sign commit
+    - name: checkout djgpp GCC
       working-directory: ./build-gcc
-      run: git checkout e7135d2 && sed -i '/build-gdb.sh/d' build-djgpp.sh && ./build-djgpp.sh --target=i686-pc-msdosdjgpp --prefix=/usr/local --batch all
+      run: git checkout e7135d2
+    - name: sed djgpp GCC
+      working-directory: ./build-gcc
+      run: sed -i '/build-gdb.sh/d' build-djgpp.sh 
+    - name: build djgpp GCC
+      working-directory: ./build-gcc
+      run: ./build-djgpp.sh --target=i686-pc-msdosdjgpp --prefix=/usr/local --batch all
     - name: remove build-gcc
       run: rm -rf build-gcc
     - name: configure
@@ -38,6 +50,9 @@ jobs:
     - name: Make
       working-directory: ./wrappers/3dfx/build
       run: make && make clean
+    - name: Make clean
+      working-directory: ./wrappers/3dfx/build
+      run: make clean
     - name: make mesa build folder
       working-directory: ./wrappers/mesa
       run: mkdir build
@@ -47,6 +62,9 @@ jobs:
     - name: Make
       working-directory: ./wrappers/mesa/build
       run: make && make clean
+    - name: Make clean
+      working-directory: ./wrappers/mesa/build
+      run: make clean
     - uses: actions/upload-artifact@v4
       with:
        name: wrappers-qemu
