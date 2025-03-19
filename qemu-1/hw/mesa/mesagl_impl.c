@@ -169,7 +169,7 @@ void wrFlushBufObj(uint32_t target, mapbufo_t *bufo)
     if (MGLUpdateGuestBufo(0, 0))
         return;
 
-    if (bufo->hva) {
+    if (bufo->hva && bufo->ocpy) {
         uint32_t szBuf = (bufo->range)? bufo->range:(bufo->mapsz - bufo->offst);
         memcpy((void *)(bufo->hva + bufo->offst), (void *)(bufo->gpa - ALIGNBO(bufo->mapsz) + bufo->offst), szBuf);
     }
@@ -1675,13 +1675,11 @@ int ContextUseSRGB(void)
 }
 int SwapFpsLimit(int fps)
 {
-    int ret;
+    int ret = 0;
     if (fps && (fps != cfg_fpsLimit)) {
         cfg_fpsLimit = fps;
         ret = 1;
     }
-    else
-        ret = 0;
     return ret;
 }
 void GLBufOAccelCfg(int enable) { cfg_bufoAccelEN = enable; }

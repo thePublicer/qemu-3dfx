@@ -56,7 +56,7 @@ int MGLUpdateGuestBufo(mapbufo_t *bufo, int add) { return 0; }
 
 int MGLUpdateGuestBufo(mapbufo_t *bufo, int add)
 {
-    int ret = GetBufOAccelEN()? kvm_enabled():0;
+    int ret = (GetBufOAccelEN() || (bufo && bufo->tgt == GL_PIXEL_UNPACK_BUFFER))? kvm_enabled():0;
 
     if (ret && bufo) {
         bufo->lvl = (add)? MapBufObjGpa(bufo):0;
@@ -137,6 +137,7 @@ int MGLUpdateGuestBufo(mapbufo_t *bufo, int add)
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, pfmsk); \
         if (flags) \
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, flags); \
+        SDL_SetRelativeMouseMode(SDL_FALSE); \
     } while(0)
 #define GL_CREATECONTEXT(x) \
     do { x = SDL_GL_CreateContext(window); } while(0)
@@ -333,8 +334,8 @@ static void cwnd_mesagl(void *swnd, void *nwnd, void *opaque)
 #ifdef CONFIG_DARWIN
     ctx[0] = SDL_GL_GetCurrentContext();
 #endif
-    qatomic_set(&wnd_ready, 1);
     DPRINTF("MESAGL window [SDL2 %p] ready", swnd);
+    qatomic_set(&wnd_ready, 1);
 }
 
 void SetMesaFuncPtr(void *p)

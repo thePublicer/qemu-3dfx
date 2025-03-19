@@ -36,7 +36,7 @@
 
 int MGLUpdateGuestBufo(mapbufo_t *bufo, int add)
 {
-    int ret = GetBufOAccelEN()? whpx_enabled():0;
+    int ret = (GetBufOAccelEN() || (bufo && bufo->tgt == GL_PIXEL_UNPACK_BUFFER))? whpx_enabled():0;
 
     if (ret && bufo) {
         bufo->lvl = (add)? MapBufObjGpa(bufo):0;
@@ -183,8 +183,8 @@ static void cwnd_mesagl(void *swnd, void *nwnd, void *opaque)
     ReleaseDC(hwnd, hDC);
     hwnd = (HWND)nwnd;
     hDC = GetDC(hwnd);
-    qatomic_set(&wnd_ready, 1);
     DPRINTF("MESAGL window [native %p] ready", nwnd);
+    qatomic_set(&wnd_ready, 1);
 }
 
 static void TmpContextPurge(void)

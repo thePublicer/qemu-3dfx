@@ -452,7 +452,7 @@ static void fltrxstr(const char *xstr, size_t len, const char *bless)
 struct mglOptions {
     int bufoAcc;
     int dispTimerMS;
-    int ovrdSync;
+    int swapInt;
     int useMSAA;
     int useSRGB;
     int bltFlip;
@@ -487,8 +487,8 @@ static void parse_options(struct mglOptions *opt)
         while(fgets(line, MAX_XSTR, f)) {
             i = parse_value(line, "DispTimerMS,", &v);
             opt->dispTimerMS = (i == 1)? (0x8000U | (v & 0x7FFFU)):opt->dispTimerMS;
-            i = parse_value(line, "OverrideSync,", &v);
-            opt->ovrdSync = (i == 1)? (v & 0x03U):opt->ovrdSync;
+            i = parse_value(line, "SwapInterval,", &v);
+            opt->swapInt = (i == 1)? (v & 0x03U):opt->swapInt;
             i = parse_value(line, "BufOAccelEN,", &v);
             opt->bufoAcc = ((i == 1) && v)? 1:opt->bufoAcc;
             i = parse_value(line, "ContextMSAA,", &v);
@@ -16618,7 +16618,7 @@ static uint32_t PT_CALL wglSwapIntervalEXT (uint32_t arg0)
     parse_options(&cfg);
     WGL_FUNCP("wglSwapIntervalEXT");
     argsp[0] = (cfg.vsyncOff)? 0:arg0;
-    swapFps = (argsp[0] > 0)? 0x7FU:swapFps;
+    swapFps = (argsp[0] == 0)? swapFps:0xFEU;
     ptm[0xFDC >> 2] = MESAGL_MAGIC;
     WGL_FUNCP_RET(ret);
     return ret;
@@ -17188,8 +17188,8 @@ mglMakeCurrent (uint32_t arg0, uint32_t arg1)
             if (wglGetSwapIntervalEXT())
                 wglSwapIntervalEXT(0);
         }
-        else if (cfg.ovrdSync && (cfg.ovrdSync != wglGetSwapIntervalEXT()))
-            wglSwapIntervalEXT(cfg.ovrdSync);
+        else if (cfg.swapInt && (cfg.swapInt != wglGetSwapIntervalEXT()))
+            wglSwapIntervalEXT(cfg.swapInt);
         if (logpname)
             HeapFree(GetProcessHeap(), 0, logpname);
         logpname = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 0x2000);
@@ -17323,9 +17323,9 @@ int WINAPI wglSwapBuffers (HDC hdc)
     swapRet[0] = swapFps;
     ptm[0xFF0 >> 2] = MESAGL_MAGIC;
     ret = swapRet[0];
-    if (ret & 0xFEU) {
+    if (ret & 0x1FEU) {
         static uint32_t nexttick;
-        const uint32_t maxFPS = (ret >> 1) & 0x7FU;
+        const uint32_t maxFPS = (ret & 0x1FEU) >> 1;
         while (GetTickCount() < nexttick)
             Sleep(0);
         nexttick = GetTickCount();
